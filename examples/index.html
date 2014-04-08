@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indoor Map Example</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+
+    <!--[if lte IE 8]><link rel="stylesheet" href="libs/leaflet.ie.css" /><![endif]-->
+
+    <style type="text/css">
+        body {
+          padding: 0;
+          margin: 0;
+        }
+
+        html, body, #map {
+          height: 100%;
+        }
+
+        .info {
+            width: 150px;
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="jquery.min.js"></script>
+    <script src="leaflet-src.js"></script>
+    <script src="../leaflet-indoor.js"></script>
+    <script src="osmtogeojson.js"></script> 
+    <script type="text/JavaScript">
+
+        // Create the map
+        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            osm = new L.TileLayer(osmUrl, {
+                maxZoom: 22,
+                attribution: "Map data &copy; OpenStreetMap contributors"
+            });
+
+        map = new L.Map('map', {
+            layers: [osm],
+            center: new L.LatLng(49.41873, 8.67689),
+            zoom: 19
+        });
+
+        var query = '(relation(1370729);>>->.rels;>;);out;';
+
+        $.get("http://overpass.osm.rambler.ru/cgi/interpreter?data=" + query, function(data) {
+            var geoJSON = osmtogeojson(data, {
+                polygonFeatures: {
+                    buildingpart: true
+                }
+            });
+
+            var indoorLayer = new L.Indoor(geoJSON, {
+                getLevel: function(feature) { 
+                    if (feature.properties.relations.length === 0)
+                        return null;
+
+                    return feature.properties.relations[0].reltags.level;
+                },
+                onEachFeature: function(feature, layer) {
+                    layer.bindPopup(JSON.stringify(feature.properties, null, 4));
+                },
+                style: function(feature) {
+                    var fill = 'white';
+
+                    if (feature.properties.tags.buildingpart === 'corridor') {
+                        fill = '#169EC6';
+                    } else if (feature.properties.tags.buildingpart === 'verticalpassage') {
+                        fill = '#0A485B';
+                    }
+
+                    return {
+                        fillColor: fill,
+                        weight: 1,
+                        color: '#666',
+                        fillOpacity: 1
+                    };
+                }
+            });
+
+            indoorLayer.setLevel("0");
+
+            indoorLayer.addTo(map);
+
+            var levelControl = new L.Control.Level({
+                level: "0",
+                levels: indoorLayer.getLevels()
+            });
+
+            // Connect the level control to the indoor layer
+            levelControl.addEventListener("levelchange", indoorLayer.setLevel, indoorLayer);
+
+            levelControl.addTo(map);
+        });
+
+        var legend = L.control({position: 'topright'});
+
+        legend.onAdd = function(map) {
+            var d = "This Leaflet plugin makes it easier to create indoor " +
+                    "maps. This example pulls in the data for a particular " +
+                    "building, and then displays it on the map, you can " +
+                    "change the level displayed by using the selector at " +
+                    "the bottom right of the map."
+
+            var div = L.DomUtil.create('div', 'info legend');
+
+            div.appendChild(document.createTextNode(d));
+
+            return div;
+        };
+
+        legend.addTo(map);
+    </script>
+</body>
+</html>
