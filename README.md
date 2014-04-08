@@ -4,6 +4,11 @@ Leaflet Indoor
 Provides basic tools to create indoor maps with
 [Leaflet](http://leafletjs.com).
 
+## Demo
+
+You can see the demo included in the example directory
+[here](http://cbaines.github.io/leaflet-indoor/examples/).
+
 ## Using the plugin
 
 See the included examples for usage.
