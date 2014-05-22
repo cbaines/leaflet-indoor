@@ -65,7 +65,9 @@ L.Indoor = L.Class.extend({
         }
 
         if (this._level !== null) {
-            this._map.addLayer(this._layers[this._level]);
+            if (this._level in this._layers) {
+                this._map.addLayer(this._layers[this._level]);
+            }
         }
     },
     onRemove: function (map) {
@@ -138,8 +140,13 @@ L.Indoor = L.Class.extend({
         var layer = this._layers[level];
 
         if (this._map !== null) {
-            this._map.removeLayer(oldLayer);
-            this._map.addLayer(layer);
+            if (this._map.hasLayer(oldLayer)) {
+                this._map.removeLayer(oldLayer);
+            }
+
+            if (layer) {
+                this._map.addLayer(layer);
+            }
         }
 
         this._level = level;
