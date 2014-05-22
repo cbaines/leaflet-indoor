@@ -214,9 +214,6 @@ L.Control.Level = L.Control.extend({
         return div;
     },
     _levelChange: function(e) {
-        // Probably won't work in some browsers, see
-        // https://developer.mozilla.org/en-US/docs/Web/API/element.classList
-
         if (this._map !== null) {
             if (typeof e.oldLevel !== "undefined")
                 this._buttons[e.oldLevel].style.backgroundColor = "#FFFFFF";
