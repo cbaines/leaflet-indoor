@@ -4,6 +4,10 @@ Leaflet Indoor
 Provides basic tools to create indoor maps with
 [Leaflet](http://leafletjs.com).
 
+This plugin provides a layer intended for displaying indoor data (rooms,
+corridors, ...). It also provides a control component to change the level
+displayed.
+
 ## Demo
 
 You can see the demo included in the example directory
