@@ -98,7 +98,10 @@ L.Indoor = L.Class.extend({
                     if (level in layers) {
                         layer = layers[level];
                     } else {
-                        layer = layers[level] = L.geoJson({ type: "FeatureCollection", features: [] }, options);
+                        layer = layers[level] = L.geoJson({
+                            type: "FeatureCollection",
+                            features: []
+                        }, options);
                     }
 
                     layer.addData(part);
@@ -107,7 +110,10 @@ L.Indoor = L.Class.extend({
                 if (level in layers) {
                     layer = layers[level];
                 } else {
-                    layer = layers[level] = L.geoJson({ type: "FeatureCollection", features: [] }, options);
+                    layer = layers[level] = L.geoJson({
+                        type: "FeatureCollection",
+                        features: []
+                    }, options);
                 }
 
                 layer.addData(part);
