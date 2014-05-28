@@ -3,7 +3,7 @@
 <head>
     <title>Indoor Map Example</title>
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <link rel="stylesheet" href="leaflet.css" />
 
     <!--[if lte IE 8]><link rel="stylesheet" href="libs/leaflet.ie.css" /><![endif]-->
 
@@ -38,7 +38,7 @@
     <script type="text/JavaScript">
 
         // Create the map
-        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        var osmUrl = '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             osm = new L.TileLayer(osmUrl, {
                 maxZoom: 22,
                 attribution: "Map data &copy; OpenStreetMap contributors"
@@ -52,7 +52,7 @@
 
         var query = '(relation(1370729);>>->.rels;>;);out;';
 
-        $.get("http://overpass.osm.rambler.ru/cgi/interpreter?data=" + query, function(data) {
+        $.get("//overpass-api.de/api/interpreter?data=" + query, function(data) {
             var geoJSON = osmtogeojson(data, {
                 polygonFeatures: {
                     buildingpart: true
