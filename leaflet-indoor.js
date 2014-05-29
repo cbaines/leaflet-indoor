@@ -71,7 +71,10 @@ L.Indoor = L.Class.extend({
         }
     },
     onRemove: function (map) {
-        this._map.removeLayer(this._layers[this._level]);
+        if (this._level in this._layers) {
+            this._map.removeLayer(this._layers[this._level]);
+        }
+
         this._map = null;
     },
     addData: function(data) {
