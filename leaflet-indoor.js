@@ -42,7 +42,22 @@ L.Indoor = L.Class.extend({
                         layer.fire('click', e);
                     });
 
-                    layers[feature.properties.level].addLayer(marker);
+                    var level = options.getLevel(feature);
+
+                    if (typeof(level) === 'undefined') {
+                        console.warn("level undefined for");
+                        console.log(feature);
+                    } else {
+                        function addToLevel(level) {
+                            layers[level].addLayer(marker);
+                        }
+
+                        if (L.Util.isArray(level)) {
+                            level.forEach(addToLevel);
+                        } else {
+                            addToLevel(level);
+                        }
+                    }
                 }
             }
         };
