@@ -3,7 +3,7 @@
 <head>
     <title>Indoor Map Example</title>
 
-    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="../leaflet.css" />
 
     <!--[if lte IE 8]><link rel="stylesheet" href="libs/leaflet.ie.css" /><![endif]-->
 
@@ -31,9 +31,10 @@
 <body>
     <div id="map"></div>
 
-    <script src="jquery.min.js"></script>
-    <script src="leaflet-src.js"></script>
-    <script src="../leaflet-indoor.js"></script>
+    <script src="../jquery.min.js"></script>
+    <script src="../leaflet-src.js"></script>
+    <script src="../../leaflet-indoor.js"></script>
+    <script src="osmtogeojson.js"></script> 
     <script type="text/JavaScript">
 
         // Create the map
@@ -49,12 +50,21 @@
             zoom: 19
         });
 
-        // This example uses a GeoJSON FeatureCollection saved to a file
-        // (data.json), see the other example (live/index.html) for details on
-        // fetching data using the OverpassAPI (this is also how the data in
-        // data.json was generated)
+        // This example uses OpenStreetMap data, fetched from the OverpassAPI,
+        // note however that leaflet-indoor does not fetch any data.
+        //
+        // 1370729 is the OSM ID for the relation of the building used in this
+        // example, it can be viewed online here:
+        //   http://www.openstreetmap.org/relation/1370729
+        var query = '(relation(1370729);>>->.rels;>;);out;';
 
-        $.getJSON("data.json", function(geoJSON) {
+        $.get("//overpass-api.de/api/interpreter?data=" + query, function(data) {
+
+            var geoJSON = osmtogeojson(data, {
+                polygonFeatures: {
+                    buildingpart: true
+                }
+            });
 
             var indoorLayer = new L.Indoor(geoJSON, {
                 getLevel: function(feature) { 
