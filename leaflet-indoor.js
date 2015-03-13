@@ -9,6 +9,9 @@
 L.Indoor = L.Class.extend({
 
     options: {
+        // by default the levels are expected to be in the level attribute in
+        // the feature properties, pass a replacement function in options if
+        // this is not the case.
         getLevel: function(feature) {
             return feature.properties.level;
         }
@@ -82,6 +85,8 @@ L.Indoor = L.Class.extend({
         if (this._level !== null) {
             if (this._level in this._layers) {
                 this._map.addLayer(this._layers[this._level]);
+            } else {
+                // TODO: Display warning?
             }
         }
     },
@@ -93,11 +98,9 @@ L.Indoor = L.Class.extend({
         this._map = null;
     },
     addData: function(data) {
-        var layers = this._layers;
-
-        var options = this.options;
-
-        var features = L.Util.isArray(data) ? data : data.features;
+        var layers = this._layers,
+            options = this.options,
+            features = L.Util.isArray(data) ? data : data.features;
 
         features.forEach(function (part) {
 
@@ -106,13 +109,18 @@ L.Indoor = L.Class.extend({
             var layer;
 
             if (typeof level === 'undefined' ||
-                level === null)
-                return;
+                level === null) {
+                // TODO: Display warning
 
-            if (!("geometry" in part)) {
                 return;
             }
 
+            if (!("geometry" in part)) {
+                // TODO: Not sure if this is still needed/display warning
+                return;
+            }
+
+            // if the feature is on mutiple levels
             if (L.Util.isArray(level)) {
                 level.forEach(function(level) {
                     if (level in layers) {
@@ -126,7 +134,7 @@ L.Indoor = L.Class.extend({
 
                     layer.addData(part);
                 });
-            } else {
+            } else { // feature is on a single level
                 if (level in layers) {
                     layer = layers[level];
                 } else {
@@ -194,6 +202,8 @@ L.Control.Level = L.Control.extend({
 
     options: {
         position: 'bottomright',
+
+        // used to get a unique integer for each level to be used to order them
         parseLevel: function(level) {
             return parseInt(level, 10);
         }
