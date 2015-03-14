@@ -11,7 +11,7 @@ displayed.
 ## Demo
 
 You can see the demo included in the example directory
-[here](http://cbaines.github.io/leaflet-indoor/examples/).
+[here](http://cbaines.net/projects/osm/leaflet-indoor/examples/).
 
 ## Using the plugin
 
