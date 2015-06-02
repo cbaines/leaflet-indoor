@@ -1,0 +1,25 @@
+{
+  "name": "leaflet-indor-npm",
+  "version": "1.0.0",
+  "description": "Leaflet Indoor\r =====================",
+  "main": "leaflet-indoor.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inakigarcia/leaflet-indoor.git"
+  },
+  "keywords": [
+    "indoor"
+  ],
+  "author": "Christopher Baines",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inakigarcia/leaflet-indoor/issues"
+  },
+  "homepage": "https://github.com/inakigarcia/leaflet-indoor#readme"
+}
