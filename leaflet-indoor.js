@@ -198,7 +198,15 @@ L.indoor = function(data, options) {
 };
 
 L.Control.Level = L.Control.extend({
-    includes: L.Mixin.Events,
+    includes: function () {
+        var version = L.version.split(".");
+        //If Version is >= 1.2.0
+        if (parseInt(version[0], 10) === 1 && parseInt(version[1], 10) >= 2) {
+            return L.Events
+        } else {
+            return L.Mixin.Events
+        }
+    },
 
     options: {
         position: 'bottomright',
