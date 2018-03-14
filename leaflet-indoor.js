@@ -6,7 +6,7 @@
  *
  * getLevels can be called to get the array of levels that are present.
  */
-L.Indoor = L.Class.extend({
+L.Indoor = L.Layer.extend({
 
     options: {
         // by default the levels are expected to be in the level attribute in
@@ -198,7 +198,7 @@ L.indoor = function(data, options) {
 };
 
 L.Control.Level = L.Control.extend({
-    includes: L.Mixin.Events,
+    includes: L.Evented,
 
     options: {
         position: 'bottomright',
@@ -216,11 +216,9 @@ L.Control.Level = L.Control.extend({
         this._buttons = {};
         this._listeners = [];
         this._level = options.level;
-
-        this.addEventListener("levelchange", this._levelChange, this);
     },
     onAdd: function(map) {
-        var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+        var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control-button');
 
         div.style.font = "18px 'Lucida Console',Monaco,monospace";
 
@@ -249,7 +247,9 @@ L.Control.Level = L.Control.extend({
             var level = levels[i].num;
             var originalLevel = levels[i].label;
 
-            var levelBtn = L.DomUtil.create('a', 'leaflet-button-part', div);
+            var levelBtn = L.DomUtil.create('a', 'leaflet-buttons-control-button', div);
+            levelBtn.setAttribute('role','button');
+            levelBtn.style.cursor = 'pointer';
 
             if (level === activeLevel || originalLevel === activeLevel) {
                 levelBtn.style.backgroundColor = "#b0b0b0";
@@ -268,25 +268,24 @@ L.Control.Level = L.Control.extend({
 
         return div;
     },
-    _levelChange: function(e) {
-        if (this._map !== null) {
-            if (typeof e.oldLevel !== "undefined")
-                this._buttons[e.oldLevel].style.backgroundColor = "#FFFFFF";
-            this._buttons[e.newLevel].style.backgroundColor = "#b0b0b0";
-        }
-    },
     setLevel: function(level) {
-
         if (level === this._level)
             return;
-
         var oldLevel = this._level;
         this._level = level;
 
-        this.fireEvent("levelchange", {
-            oldLevel: oldLevel,
-            newLevel: level
-        });
+        if (this._map !== null) {
+            if (typeof oldLevel !== "undefined")
+                this._buttons[oldLevel].style.backgroundColor = "#FFFFFF";
+            this._buttons[level].style.backgroundColor = "#b0b0b0";
+        }
+
+        if(typeof this.options.indoorLayer.setLevel === 'function'){
+            this.options.indoorLayer.setLevel({
+                oldLevel: oldLevel,
+                newLevel: level
+            })
+        }
     },
     getLevel: function() {
         return this._level;
